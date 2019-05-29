@@ -3,6 +3,7 @@
 import sys
 import numpy as np
 import keras
+from sklearn.model_selection import train_test_split
 
 
 class DataOp:
@@ -63,14 +64,7 @@ class DataOp:
             print(f"Using {train_set_size} training images")
 
         # reduce training dataset
-        ix = np.random.choice(len(X), train_set_size, False)
-        X_train = X[ix]
-        y_train = y[ix]
-
-        other_ix = set(np.arange(len(X))).difference(set(ix))
-        other_ix = list(other_ix)
-        X_val_seed = X[other_ix]
-        y_val_seed = y[other_ix]
+        X_train, X_val_seed, y_train, y_val_seed = train_test_split(X, y, train_size=train_set_size, stratify=y)
 
         data = {
             "X_train": X_train,
@@ -111,8 +105,8 @@ class DataOp:
     def sample_validation_set(data):
         val_seed_size = len(data["X_val_seed"])
         ix = np.random.choice(range(val_seed_size), min(val_seed_size, 1000), False)
-        X_val = data["X_val_seed"][ix].copy()
-        y_val = data["y_val_seed"][ix].copy()
+        X_val, y_val, _, _ = train_test_split(data["X_val_seed"], data["y_val_seed"], 
+                                              train_size=min(val_seed_size, 1000), stratify=data["y_val_seed"])
         return X_val, y_val
 
     @staticmethod
