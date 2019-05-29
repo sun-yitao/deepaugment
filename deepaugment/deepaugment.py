@@ -199,7 +199,7 @@ class DeepAugment:
             self.data, epochs=self.config["child_first_train_epochs"]
         )
         self.notebook.record(
-            -1, ["first", 0.0, "first", 0.0, "first", 0.0, 0.0], 1, None, history
+            -1, ["first", 0.0] * 10, 1, None, history
         )
 
     def _evaluate_objective_func_without_augmentation(self):
